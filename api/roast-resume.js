@@ -14,7 +14,7 @@ const upload = multer({ storage: memoryStorage });
 const corsMiddleware = cors({
   origin: [
     "http://localhost:5173",
-   "https://roast-my-stuff-hackarthon.vercel.app",
+   "https://roast-my-stuff-frontend.vercel.app",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
