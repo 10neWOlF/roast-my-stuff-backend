@@ -9,11 +9,14 @@ const axios = require("axios");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 5500;
+const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+     "https://roast-my-stuff-hackarthon.vercel.app",
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -54,7 +57,7 @@ app.post("/api/roast-resume", upload.single("resume"), async (req, res) => {
       console.log("No file uploaded");
       return res.status(400).json({ error: "No file uploaded" });
     }
-
+  
     console.log("File uploaded:", req.file);
 
     const { roastLevel } = req.body;
@@ -93,7 +96,6 @@ app.post("/api/roast-resume", upload.single("resume"), async (req, res) => {
     
     Provide exactly 3 key issues and 3 action items. Keep your roast under 150 words. Be direct and savage.
     
-    For the actionItems, analyze the specific content of the submitted resume/document and provide 3 targeted recommendations to improve the most glaring weaknesses you identifyy
     Resume Content:
     ${extractedText}`;
 
@@ -120,13 +122,16 @@ app.post("/api/roast-resume", upload.single("resume"), async (req, res) => {
     
     let formattedResponse;
     try {
+      // Try to parse the response as JSON
       const content = response.data.choices[0].message.content;
       formattedResponse = JSON.parse(content);
       formattedResponse.title = "Resume Roast";
     } catch (parseError) {
       console.error("Error parsing JSON response:", parseError);
+      // Fallback to text parsing if JSON parsing fails
       const content = response.data.choices[0].message.content;
       
+      // Create a structured response
       formattedResponse = {
         title: "Resume Roast",
         roast: content,
@@ -182,7 +187,7 @@ app.post("/api/roast-project", async (req, res) => {
     
     {
       "roast": "A brutal overall roast (3-5 sentences max) highlighting the major flaws",
-      "rating": "A rating out of 5",
+      "rating": "A rating out of 10",
       "keyIssues": ["Issue 1", "Issue 2", "Issue 3"],
       "actionItems": ["Action 1", "Action 2", "Action 3"]
     }
@@ -213,13 +218,16 @@ app.post("/api/roast-project", async (req, res) => {
 
     let formattedResponse;
     try {
+      // Try to parse the response as JSON
       const content = response.data.choices[0].message.content;
       formattedResponse = JSON.parse(content);
       formattedResponse.title = "Project Roast";
     } catch (parseError) {
       console.error("Error parsing JSON response:", parseError);
+      // Fallback to text parsing if JSON parsing fails
       const content = response.data.choices[0].message.content;
       
+      // Create a structured response
       formattedResponse = {
         title: "Project Roast",
         roast: content,
